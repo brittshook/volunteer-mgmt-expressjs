@@ -82,7 +82,7 @@ router
 
     if (user) {
       res.json({ user: user });
-    } else next();
+    } else next(error(404, "User not found"));
   })
   .patch((req, res, next) => {
     const user = users.find((user, i) => {
@@ -101,17 +101,13 @@ router
     }
   })
   .delete((req, res, next) => {
-    const user = users.find((user, i) => {
-      if (user.id == req.params.userId) {
-        users.splice(i, 1);
-        return true;
-      }
-    });
+    const userIndex = users.findIndex((user) => user.id == req.params.userId);
 
-    if (user) {
-      res.json(user);
+    if (userIndex != -1) {
+      users.splice(userIndex, 1);
+      res.status(204).end();
     } else {
-      next();
+      next(error(404, "User not found"));
     }
   });
 
@@ -167,25 +163,19 @@ router
   })
   .delete((req, res, next) => {
     const userId = req.params.userId;
-    const shiftId = req.params.shiftId;
-
     const user = users.find((user) => user.id == userId);
 
     if (user) {
-      const shift = user.shifts.find((shift, i) => {
-        if (shift.id == shiftId) {
-          user.shifts.splice(i, 1);
-          return true;
-        }
-      });
+      const shiftIndex = user.shifts.findIndex(
+        (shift) => shift.id == req.params.shiftId
+      );
 
-      if (shift) {
+      if (shiftIndex != -1) {
+        user.shifts.splice(shiftIndex, 1);
         res.status(204).end();
       } else {
         next(error(404, "Shift not found"));
       }
-    } else {
-      next();
     }
   });
 
