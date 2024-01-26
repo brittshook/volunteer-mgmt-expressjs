@@ -12,6 +12,7 @@ router.patch("/approve/:userId/?", (req, res, next) => {
   if (userId && status) {
     if (user) {
       user.status = status;
+      res.json({ user: user });
     } else {
       next(error(404, "User not found"));
     }
