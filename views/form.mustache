@@ -1,12 +1,27 @@
-<form action="/api/users" method="post">
-<label for="first"><input ype="text" name="first" minlength="1" maxlength="50" placeholder="Grace" required/></label>
-<label for="last"><input type="text" name="last" minlength="1" maxlength="50" placeholder="Hopper" required/></label>
-<label for="email"><input type="email" name="email" minlength="1" maxlength="50" placeholder="hey@example.com" required/></label>
-<label for="address"><input type="text" name="address" minlength="1" maxlength="120" placeholder="123 Billy Goat Rd., Seneca, SC, 29678" required/></label>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Volunteer Signup</title>
+  <link rel="stylesheet" href="http://localhost:3000/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <form action="/api/users" method="post">
+        <h1>Volunteer Sign Up</h1>
+        <label for="first">First name<input ype="text" name="first" minlength="1" maxlength="50" placeholder="Grace" required/></label>
+        <label for="last">Last name<input type="text" name="last" minlength="1" maxlength="50" placeholder="Hopper" required/></label>
+        <label for="email">Email address<input type="email" name="email" minlength="1" maxlength="50" placeholder="hey@example.com" required/></label>
+        <label for="address">Street address<input type="text" name="address" minlength="1" maxlength="120" placeholder="123 Billy Goat Rd., Seneca, SC, 29678" required/></label>
 
-<!-- Hidden field for user role -->
-<input type="hidden" name="role" value="volunteer">
+        <!-- Hidden field for user role -->
+        <input type="hidden" name="role" value="volunteer">
 
-<button type="submit">Sign up</button>
-</form>
-<div id="error">{{error}}</div>
+        <button type="submit">Sign up</button>
+    </form>
+    <div id="error">{{error}}</div>
+</body>
+</html>
