@@ -1,0 +1,12 @@
+<form action="/api/users" method="post">
+<label for="first"><input ype="text" name="first" minlength="1" maxlength="50" placeholder="Grace" required/></label>
+<label for="last"><input type="text" name="last" minlength="1" maxlength="50" placeholder="Hopper" required/></label>
+<label for="email"><input type="email" name="email" minlength="1" maxlength="50" placeholder="hey@example.com" required/></label>
+<label for="address"><input type="text" name="address" minlength="1" maxlength="120" placeholder="123 Billy Goat Rd., Seneca, SC, 29678" required/></label>
+
+<!-- Hidden field for user role -->
+<input type="hidden" name="role" value="volunteer">
+
+<button type="submit">Sign up</button>
+</form>
+<div id="error">{{error}}</div>
