@@ -4,6 +4,7 @@ const router = express.Router();
 
 const users = require("../data/users");
 const shifts = require("../data/shifts");
+const error = require("../utils/error");
 
 router
   .route("/")
