@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const bodyParser = require("body-parser");
 const mustacheExpress = require("mustache-express");
 
@@ -9,6 +10,8 @@ const error = require("./utils/error");
 
 const app = express();
 const port = 3000;
+
+app.use(cors());
 
 app.engine("mustache", mustacheExpress());
 app.set("view engine", "mustache");
