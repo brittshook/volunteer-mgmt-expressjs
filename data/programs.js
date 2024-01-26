@@ -6,3 +6,5 @@ const programs = [
   { id: 5, name: "New Life" },
   { id: 6, name: "Hands that Heal" },
 ];
+
+module.exports = programs;

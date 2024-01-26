@@ -27,3 +27,5 @@ const users = [
     status: "approved",
   },
 ];
+
+module.exports = users;
