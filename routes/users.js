@@ -1,5 +1,5 @@
 const express = require("express");
-const shortUUID = require("short-unique-id");
+const { v4: uuidv4 } = require("uuid");
 const router = express.Router();
 
 const users = require("../data/users");
@@ -45,7 +45,7 @@ router
         }
       }
 
-      const uuid = new shortUUID({ length: 8 });
+      const uuid = uuidv4().slice(0, 8);
 
       const user = {
         id: uuid,

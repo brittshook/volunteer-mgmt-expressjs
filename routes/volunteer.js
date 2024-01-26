@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const { v4: uuidv4 } = require("uuid");
+
 
 const shifts = require("../data/shifts");
 const programs = require("../data/programs");
@@ -70,8 +72,10 @@ router
         next(error(409, "Shift already exists"));
       }
 
+      const uuid = uuidv4().slice(0, 8);
+
       const shift = {
-        id: shifts.length + 1,
+        id: uuid,
         name: name,
         program: program,
         startTime: startTime,
