@@ -19,3 +19,5 @@ router.patch("/approve/:userId/?", (req, res, next) => {
     next(error(400, "Insufficient data"));
   }
 });
+
+module.exports = router;

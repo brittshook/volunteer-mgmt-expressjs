@@ -148,3 +148,5 @@ router
       next();
     }
   });
+
+module.exports = router;
