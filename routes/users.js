@@ -9,6 +9,25 @@ const error = require("../utils/error");
 router
   .route("/")
   .get((req, res) => {
+    const status = req.query.status;
+    const role = req.query.role;
+
+    if (status) {
+      const usersByStatus = users.filter((user) => user.status == status);
+      res.json({ users: usersByStatus });
+    }
+
+    if (role) {
+      const usersByRole = users.filter((user) => {
+        for (const userRole of user.role) {
+          if (userRole == role) {
+            return true;
+          }
+        }
+      });
+      res.json({ users: usersByRole });
+    }
+
     res.json({ users: users });
   })
   .post((req, res, next) => {
@@ -37,7 +56,7 @@ router
       };
 
       users.push(user);
-      res.json(user);
+      res.json({ user: user });
     } else next(error(400, "Insufficient data"));
   });
 
@@ -86,11 +105,27 @@ router
   .route("/:userId/shifts/?")
   .get((req, res, next) => {
     const userId = req.params.userId;
+    const startTime = req.query.startTime;
+    const endTime = req.query.endTime;
     const user = users.find((user) => user.id == userId);
 
     if (user) {
       if (user.shifts) {
-        res.json({ shifts: user.shifts });
+        if (startTime && endTime) {
+          const filteredShifts = user.shifts.filter((shift) => {
+            return shift.startTime >= startTime && shift.endTime <= endTime;
+          });
+          res.json({ shifts: filteredShifts });
+        } else if (startTime || endTime) {
+          next(
+            error(
+              400,
+              "To filter by time range, both start time and end time must be provided"
+            )
+          );
+        } else {
+          res.json({ shifts: user.shifts });
+        }
       } else {
         next(error(404, "No shifts found"));
       }
