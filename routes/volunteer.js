@@ -3,6 +3,7 @@ const router = express.Router();
 
 const shifts = require("../data/shifts");
 const programs = require("../data/programs");
+const error = require("../utils/error");
 
 router
   .route("/programs/?")
@@ -29,7 +30,7 @@ router
     }
   });
 
-router.route("/programs/:programId/?").delete((req, res, next) => {
+router.delete("/programs/:programId/?", (req, res, next) => {
   const program = programs.find((program, i) => {
     if (program.id == req.params.userId) {
       users.splice(i, 1);
@@ -44,7 +45,7 @@ router.route("/programs/:programId/?").delete((req, res, next) => {
   }
 });
 
-router.route("/shifts/?").post((req, res, next) => {
+router.post("/shifts/?", (req, res, next) => {
   const name = req.body.name;
   const program = req.body.program;
   const startTime = req.body.startTime;
