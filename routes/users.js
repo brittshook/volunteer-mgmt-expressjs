@@ -148,35 +148,39 @@ router
     const user = users.find((user) => user.id == userId);
 
     if (user) {
-      const shiftId = req.params.shiftId;
+      const shiftId = req.body.shiftId;
       const shift = shifts.find((shift) => shift.id == shiftId);
 
       if (shift) {
+        if (!user.hasOwnProperty("shifts")) {
+          user.shifts = [];
+        }
         user.shifts.push(shift);
         res.json({ shifts: user.shifts });
       } else {
         next(error(404, "Shift not found"));
       }
     } else {
-      next();
-    }
-  })
-  .delete((req, res, next) => {
-    const userId = req.params.userId;
-    const user = users.find((user) => user.id == userId);
-
-    if (user) {
-      const shiftIndex = user.shifts.findIndex(
-        (shift) => shift.id == req.params.shiftId
-      );
-
-      if (shiftIndex != -1) {
-        user.shifts.splice(shiftIndex, 1);
-        res.status(204).end();
-      } else {
-        next(error(404, "Shift not found"));
-      }
+      next(error(404, "User not found"));
     }
   });
+
+router.delete("/:userId/shifts/:shiftId/?", (req, res, next) => {
+  const userId = req.params.userId;
+  const user = users.find((user) => user.id == userId);
+
+  if (user) {
+    const shiftIndex = user.shifts.findIndex(
+      (shift) => shift.id == req.params.shiftId
+    );
+
+    if (shiftIndex != -1) {
+      user.shifts.splice(shiftIndex, 1);
+      res.status(204).end();
+    } else {
+      next(error(404, "Shift not found"));
+    }
+  }
+});
 
 module.exports = router;
