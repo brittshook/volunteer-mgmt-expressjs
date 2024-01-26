@@ -43,7 +43,7 @@ router
 router
   .route("/:userId/?")
   .get((req, res, next) => {
-    const userId = req.query.userId;
+    const userId = req.params.userId;
     const user = users.find((user) => user.id == userId);
 
     if (user) {
@@ -84,7 +84,7 @@ router
 router
   .route("/:userId/shifts/?")
   .get((req, res, next) => {
-    const userId = req.query.userId;
+    const userId = req.params.userId;
     const user = users.find((user) => user.id == userId);
 
     if (user) {
@@ -98,7 +98,7 @@ router
     }
   })
   .post((req, res, next) => {
-    const userId = req.query.userId;
+    const userId = req.params.userId;
     const user = users.find((user) => user.id == userId);
 
     if (user) {
@@ -116,7 +116,7 @@ router
     }
   })
   .delete((req, res, next) => {
-    const userId = req.query.userId;
+    const userId = req.params.userId;
     const shiftId = req.params.shiftId;
 
     const user = users.find((user) => user.id == userId);
