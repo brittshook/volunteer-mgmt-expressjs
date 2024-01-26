@@ -19,7 +19,7 @@ router
       }
 
       const program = {
-        id: programs.length,
+        id: programs.length + 1,
         name: programName,
       };
 
@@ -31,58 +31,61 @@ router
   });
 
 router.delete("/programs/:programId/?", (req, res, next) => {
-  const program = programs.find((program, i) => {
-    if (program.id == req.params.userId) {
-      users.splice(i, 1);
-      return true;
+  const programIndex = programs.findIndex(
+    (program) => program.id == req.params.programId
+  );
+
+  if (programIndex != -1) {
+    programs.splice(programIndex, 1);
+    res.status(204).end();
+  } else {
+    next(error(404, "Program not found"));
+  }
+});
+
+router
+  .route("/shifts/?")
+  .get((req, res, next) => {
+    res.json({ shifts: shifts });
+  })
+  .post((req, res, next) => {
+    const name = req.body.name;
+    const program = req.body.program;
+    const startTime = req.body.startTime;
+    const endTime = req.body.endTime;
+    const location = req.body.location;
+    const volunteerLimit = req.body.volunteerLimit;
+
+    if (name && program && startTime && endTime && volunteerLimit) {
+      if (
+        shifts.find(
+          (shift) =>
+            shift.name == name &&
+            shift.program == program &&
+            shift.startTime == startTime &&
+            shift.endTime == endTime &&
+            shift.location == location
+        )
+      ) {
+        next(error(409, "Shift already exists"));
+      }
+
+      const shift = {
+        id: shifts.length + 1,
+        name: name,
+        program: program,
+        startTime: startTime,
+        endTime: endTime,
+        location: location,
+        volunteerLimit: volunteerLimit,
+      };
+
+      shifts.push(shift);
+      res.json({ shift: shift });
+    } else {
+      next(error(400, "Insufficient data"));
     }
   });
-
-  if (program) {
-    res.json(program);
-  } else {
-    next();
-  }
-});
-
-router.post("/shifts/?", (req, res, next) => {
-  const name = req.body.name;
-  const program = req.body.program;
-  const startTime = req.body.startTime;
-  const endTime = req.body.endTime;
-  const location = req.body.location;
-  const volunteerLimit = req.body.volunteerLimit;
-
-  if (name && program && startTime && endTime && volunteerLimit) {
-    if (
-      shifts.find(
-        (shift) =>
-          shift.name == name &&
-          shift.program == program &&
-          shift.startTime == startTime &&
-          shift.endTime == endTime &&
-          shift.location == location
-      )
-    ) {
-      next(error(409, "Shift already exists"));
-    }
-
-    const shift = {
-      id: programs.length,
-      name: name,
-      program: program,
-      startTime: startTime,
-      endTime: endTime,
-      location: location,
-      volunteerLimit: volunteerLimit,
-    };
-
-    shifts.push(shift);
-    res.json({ shift: shift });
-  } else {
-    next(error(400, "Insufficient data"));
-  }
-});
 
 router
   .route("/shifts/:shiftId/?")
@@ -92,7 +95,7 @@ router
 
     if (shift) {
       res.json({ shift: shift });
-    } else next();
+    } else next(error(404, "Shift not found"));
   })
   .put((req, res, next) => {
     const shiftId = req.params.shiftId;
@@ -135,17 +138,15 @@ router
     }
   })
   .delete((req, res, next) => {
-    const shift = shifts.find((shift, i) => {
-      if (shift.id == req.params.shiftId) {
-        shifts.splice(i, 1);
-        return true;
-      }
-    });
+    const shiftIndex = shifts.findIndex(
+      (shift) => shift.id == req.params.shiftId
+    );
 
-    if (shift) {
-      res.json(shift);
+    if (shiftIndex != -1) {
+      shifts.splice(shiftIndex, 1);
+      res.status(204).end();
     } else {
-      next();
+      next(error(404, "Shift not found"));
     }
   });
 
