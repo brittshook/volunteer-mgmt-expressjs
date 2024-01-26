@@ -31,24 +31,26 @@ router
     res.json({ users: users });
   })
   .post((req, res, next) => {
-    const firstName = req.body.first;
-    const lastName = req.body.last;
-    const email = req.body.email;
-    const address = req.body.address;
-    const role = req.body.role;
+    const { first, last, email, address, role } = req.body;
     const status = "pending";
 
-    if (firstName && lastName && email && address && role) {
+    if (first && last && email && address && role) {
       if (users.find((user) => user.email == email)) {
-        next(error(409, "User already exists"));
+        if (req.accepts("html")) {
+          res.render("form.mustache", {
+            error: "Account already exists. Try signing in instead.",
+          });
+        } else {
+          next(error(409, "User already exists"));
+        }
       }
 
       const uuid = new shortUUID({ length: 8 });
 
       const user = {
         id: uuid,
-        first: firstName,
-        last: lastName,
+        first: first,
+        last: last,
         email: email,
         address: address,
         role: role,
@@ -56,8 +58,20 @@ router
       };
 
       users.push(user);
-      res.json({ user: user });
-    } else next(error(400, "Insufficient data"));
+      if (req.accepts("html")) {
+        res.render("success.mustache");
+      } else {
+        res.json({ user: user });
+      }
+    } else {
+      if (req.accepts("html")) {
+        res.render("form.mustache", {
+          error: "Please fill out all fields.",
+        });
+      } else {
+        next(error(400, "Insufficient data"));
+      }
+    }
   });
 
 router
